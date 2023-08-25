@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.fn2.ui.theme.Fn2Theme
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,23 +41,25 @@ import retrofit2.Response;
 
 const val API_Key_Currency = "latest?apikey=fca_live_xlJOAdBc3gF8c5MmDinU2EJuWYyryvYuXIp5RPcl"
 
-data class CurrencyDataJetpack(
-    val data: List<String>
+data class CurrencyRateResponse(
+    @SerializedName("data")
+    val listOfRates: Map<String, Double>
 )
 
 interface CurrencyAPI {
     @GET("latest?apikey=fca_live_xlJOAdBc3gF8c5MmDinU2EJuWYyryvYuXIp5RPcl")
-    suspend fun getCurrency(): CurrencyDataJetpack
+    suspend fun getCurrency(): CurrencyRateResponse
 }
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val CurrencyDataJetpack =
+            var currentCurrency =
                 remember { mutableStateOf("Чтобы узнать актуальный курс, нажмите Refresh") }
 
-
+            val scope = rememberCoroutineScope()
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://api.freecurrencyapi.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
@@ -63,14 +67,10 @@ class MainActivity : ComponentActivity() {
 
             Card {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        modifier = Modifier
-                            .background(Color.Red)
-                            .fillMaxWidth()
-                            .weight(1f),
-                        text = "${CurrencyDataJetpack}",
-                        style = TextStyle(fontSize = 22.sp)
-                    )
+                    Greeting (modifier = Modifier
+                        .background(Color.Red)
+                        .fillMaxWidth()
+                        .weight(1f))
                     Box(modifier = Modifier.weight(6f))
                     Button(modifier = Modifier
                         .fillMaxWidth()
@@ -95,10 +95,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "${currentCurrency}",
+        style = TextStyle(fontSize = 22.sp)
     )
 }
 

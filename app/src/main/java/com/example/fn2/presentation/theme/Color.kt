@@ -1,4 +1,4 @@
-package com.example.fn2.ui.theme
+package com.example.fn2.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

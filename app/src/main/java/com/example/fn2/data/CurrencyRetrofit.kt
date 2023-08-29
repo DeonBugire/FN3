@@ -1,11 +1,11 @@
 package com.example.fn2.data
 
-import com.google.gson.annotations.SerializedName
+
+import com.example.fn2.domain.Currencies
+import retrofit2.http.GET
 
 
-data class CurrencyRateResponse(
-    @SerializedName("com/example/fn2/data")
-    val listOfRates: Map<String, Double>
-)
-class CurrencyRetrofit {
+interface CurrencyAPI {
+    @GET("latest?apikey=fca_live_xlJOAdBc3gF8c5MmDinU2EJuWYyryvYuXIp5RPcl")
+    suspend fun getCurrency(): Currencies
 }

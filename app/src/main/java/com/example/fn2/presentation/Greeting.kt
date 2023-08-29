@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
     Text(
-        text = "Hey Jude",
+        text = "Чтобы обновить или получить данные, нажмите Refresh",
         style = TextStyle(fontSize = 22.sp)
     )
 }
